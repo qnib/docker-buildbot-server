@@ -1,0 +1,48 @@
+version: '2'
+services:
+    buildbot-consul:
+        hostname: buildbot-consul
+        container_name: buildbot-consul
+        image: qnib/alpn-consul
+        environment:
+         - RUN_SERVER=true
+         - CONSUL_BOOTSTRAP=true
+        ports:
+         - "8500:8500"
+        privileged: true
+
+    postgres:
+        image: postgres:9.4
+        hostname: postgres
+        container_name: postgres
+        env_file: db.env
+        expose:
+            - 5432
+
+    buildbot-master:
+        image: qnib/buildbot-master
+        hostname: buildbot-master
+        container_name: buildbot-master
+        env_file: db.env
+        environment:
+         - CONSUL_CLUSTER_IPS=buildbot-consul
+        ports:
+         - "8010:8010"
+        expose:
+         - 9989
+        links:
+         - postgres
+
+    buildbot-worker:
+        image: qnib/buildbot-worker
+        hostname: buildbot-worker
+        container_name: buildbot-worker
+        environment:
+         - CONSUL_CLUSTER_IPS=buildbot-consul
+         - BUILDMASTER=buildbot
+         - BUILDMASTER_PORT=9989
+         - WORKERNAME=example-worker
+         - WORKERPASS=pass
+         - WORKER_ENVIRONMENT_BLACKLIST="DOCKER_BUILDBOT* BUILDBOT_ENV_* BUILDBOT_1*"
+        #links:
+        # - buildbot-master

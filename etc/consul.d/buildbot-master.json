@@ -1,0 +1,15 @@
+{
+  "services": [
+    {
+      "id": "buildbot-master",
+      "name": "buildbot-master",
+      "port": 8010,
+      "checks": [
+        {
+          "script": "exit 0",
+          "interval": "5s"
+        }
+      ]
+    }
+  ]
+}
