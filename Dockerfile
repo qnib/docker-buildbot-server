@@ -4,8 +4,7 @@ ENV BUILDBOT_URL=localhost \
     BUILDBOT_WWW_PORT=8010 \
     BUILDBOT_TITLE_URL=http://blog.qnib.org \
     BUILDBOT_TITLE="QNIB Solutions"
-RUN curl -fsL https://github.com/buildbot/buildbot/archive/v${BUILDBOT_VER}.tar.gz |tar xfz - -C /tmp/ 
-RUN \
+RUN curl -fsL https://github.com/buildbot/buildbot/archive/v${BUILDBOT_VER}.tar.gz |tar xfz - -C /tmp/ \
  && mv /tmp/buildbot-${BUILDBOT_VER}/master /usr/src/buildbot \
  && rm -rf /tmp/buildbot-${BUILDBOT_VER} \
  && pip install  "/usr/src/buildbot/" \
