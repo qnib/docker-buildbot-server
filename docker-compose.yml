@@ -39,7 +39,7 @@ services:
         container_name: buildbot-worker
         environment:
          - CONSUL_CLUSTER_IPS=buildbot-consul
-         - BUILDMASTER=buildbot
+         - BUILDMASTER=buildbot-master
          - BUILDMASTER_PORT=9989
          - WORKERNAME=example-worker
          - WORKERPASS=pass
