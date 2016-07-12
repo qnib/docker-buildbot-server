@@ -38,11 +38,11 @@ services:
         hostname: buildbot-worker
         container_name: buildbot-worker
         environment:
+         - LOCAL_DOCKERENGINE=true
          - CONSUL_CLUSTER_IPS=buildbot-consul
          - BUILDMASTER=buildbot-master
          - BUILDMASTER_PORT=9989
          - WORKERNAME=example-worker
          - WORKERPASS=pass
          - WORKER_ENVIRONMENT_BLACKLIST="DOCKER_BUILDBOT* BUILDBOT_ENV_* BUILDBOT_1*"
-        #links:
-        # - buildbot-master
+        privileged: true
