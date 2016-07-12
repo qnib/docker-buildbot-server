@@ -12,69 +12,23 @@ c = BuildmasterConfig = {}
 
 ####### WORKERS
 
-# The 'workers' list defines the set of recognized workers. Each element is
-# a Worker object, specifying a unique worker name and password.  The same
-# worker name and password must be configured on the worker.
-c['workers'] = [worker.Worker("example-worker", "pass")]
-
-# 'protocols' contains information about protocols which master will use for
-# communicating with workers. You must define at least 'port' option that workers
-# could connect to your master with this protocol.
-# 'port' must match the value configured into the workers (with their
-# --master option)
-c['protocols'] = {'pb': {'port': 9989}}
+{{ file "/opt/qnib/buildbot/etc/workers.cfg" }}
 
 ####### CHANGESOURCES
 
-# the 'change_source' setting tells the buildmaster how it should find out
-# about source code changes.  Here we point to the buildbot clone of pyflakes.
-
-c['change_source'] = []
-c['change_source'].append(changes.GitPoller(
-        'git://github.com/buildbot/pyflakes.git',
-        workdir='gitpoller-workdir', branch='master',
-        pollinterval=300))
+{{ file "/opt/qnib/buildbot/etc/changesources.cfg" }}
 
 ####### SCHEDULERS
 
-# Configure the Schedulers, which decide how to react to incoming changes.  In this
-# case, just kick off a 'runtests' build
-
-c['schedulers'] = []
-c['schedulers'].append(schedulers.SingleBranchScheduler(
-                            name="all",
-                            change_filter=util.ChangeFilter(branch='master'),
-                            treeStableTimer=None,
-                            builderNames=["runtests"]))
-c['schedulers'].append(schedulers.ForceScheduler(
-                            name="force",
-                            builderNames=["runtests"]))
+{{ file "/opt/qnib/buildbot/etc/schedulers.cfg" }}
 
 ####### BUILDERS
 
-# The 'builders' list defines the Builders, which tell Buildbot how to perform a build:
-# what steps, and which workers can execute them.  Note that any particular build will
-# only take place on one worker.
-
-factory = util.BuildFactory()
-# check out the source
-factory.addStep(steps.Git(repourl='git://github.com/buildbot/pyflakes.git', mode='incremental'))
-# run the tests (note that this will require that 'trial' is installed)
-factory.addStep(steps.ShellCommand(command=["trial", "pyflakes"]))
-
-c['builders'] = []
-c['builders'].append(
-    util.BuilderConfig(name="runtests",
-      workernames=["example-worker"],
-      factory=factory))
+{{ file "/opt/qnib/buildbot/etc/builders.cfg" }}
 
 ####### STATUS TARGETS
 
-# 'status' is a list of Status Targets. The results of each build will be
-# pushed to these targets. buildbot/status/*.py has a variety to choose from,
-# like IRC bots.
-
-c['status'] = []
+{{ file "/opt/qnib/buildbot/etc/status_targets.cfg" }}
 
 ####### PROJECT IDENTITY
 
